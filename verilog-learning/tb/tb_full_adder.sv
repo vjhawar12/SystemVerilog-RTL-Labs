@@ -17,9 +17,9 @@ module tb_full_adder;
     ); 
 
     task automatic check (
+        input logic test_cin;
         input logic test_a;
         input logic test_b;
-        input logic test_cin;
         output logic expected_cout;
         output logic expected_sum;
     ); 
@@ -42,6 +42,8 @@ module tb_full_adder;
     initial begin
         $dumpfile("build/full_adder.vcd");
         $dumpvars(0, tb_full_adder);
+
+        // alternative: check(0, 0, 0); 
 
         Cin = 0; A0 = 0; B0 = 0; #10;
         Cin = 0; A0 = 0; B0 = 1; #10;
