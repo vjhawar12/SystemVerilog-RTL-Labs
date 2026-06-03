@@ -2,18 +2,27 @@
 
 module tb_tick_gen;
 
+    localparam int SYS_CLOCK_FREQ = 50_000_000;
+    localparam int BAUD_RATE = 115200;
+    localparam int OVERSAMPLING_FACTOR = 16;
+    localparam int EXPECTED_DIVISOR = SYS_CLOCK_FREQ / (BAUD_RATE * OVERSAMPLING_FACTOR); 
+
     logic clk;
     logic n_rst;
     logic enable;
     logic [4:0]count;
     logic tick;
     
-    tick_gen dut (
+    tick_gen #(
+        .SYS_CLOCK_FREQ(SYS_CLOCK_FREQ), 
+        .BAUD_RATE(BAUD_RATE),
+        .OVERSAMPLING_FACTOR(OVERSAMPLING_FACTOR)
+    ) dut (
         .clk(clk),
         .n_rst(n_rst),
         .enable(enable),
         .count(count),
-        .tick(tick)
+        .tick(tick),
     );
 
     task automatic _reset (); 
@@ -83,7 +92,7 @@ module tb_tick_gen;
         for (int i = 1; i < 19; i++) begin
             _reset();
             _enable();
-            check_tick(27 * i, i);
+            check_tick(EXPECTED_DIVISOR * i, i);
         end
 
         $display("Tick gen test passed.");
