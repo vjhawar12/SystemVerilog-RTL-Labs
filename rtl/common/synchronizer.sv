@@ -1,3 +1,7 @@
+// 2 flop synchronizer useful for signals wiht differnet clock domains to reduce the chance of metastability
+// in case a value changes right before a clock edge transition the 2 flop synchronizer can reduce that risk
+// placed on the rx side
+
 module synchronizer (
     input logic clk,
     input logic n_rst,
