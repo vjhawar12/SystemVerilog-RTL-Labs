@@ -22,7 +22,7 @@ module tb_tick_gen;
         .n_rst(n_rst),
         .enable(enable),
         .count(count),
-        .tick(tick),
+        .tick(tick)
     );
 
     task automatic _reset (); 

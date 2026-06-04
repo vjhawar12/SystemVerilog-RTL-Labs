@@ -1,9 +1,9 @@
 // DIVISOR = sys_clock / (baud_rate * oversampling factor) = 50 MHz / (115200 * 16) = 27
 
 module tick_gen #(
-    parameter int SYS_CLOCK_FREQ = 50_000_000;
-    parameter int BAUD_RATE = 115200;
-    parameter int OVERSAMPLING_FACTOR = 16;
+    parameter int SYS_CLOCK_FREQ = 50_000_000,
+    parameter int BAUD_RATE = 115200,
+    parameter int OVERSAMPLING_FACTOR = 16
 )(
     input logic clk,
     input logic n_rst,
