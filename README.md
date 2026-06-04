@@ -103,7 +103,7 @@ Waveform screenshots are included in the `photos/` folder to show important simu
 
 #### What this waveform shows
 
-This waveform shows the behavior of the clock, reset, asynchronous input signal, and synchronized output signal.
+This waveform shows the behavior of the clock, reset, asynchronous input signal, and synchronized output signal. 
 
 The important signals are:
 
@@ -114,20 +114,9 @@ The important signals are:
 
 #### Why this behavior is correct
 
+The output signal `out_sig` is buffered by ~20 ns which is twice the clock period of 10 ns. Since this is a 2-flop synchronizer, the input signal gets sampled not on the first rising clock edge after, but rather the second due to their being 2 connected flip flops. We can see that at 6 ns `in_sig` rises from 0 to 1. This is 1 ns after the first rising clock edge (at 5ns). 2 clock cycles later, at 25 ns, another rising edge occures which is when the out_sig waveform sees the new value of in_sig and rises to 1. 
 
-
-### Reset Behavior
-
-
-
-#### What this waveform shows
-
-This waveform shows how the reset signal affects the internal state and output signals.
-
-When `n_rst` is asserted low, the flip-flop values are cleared to known values. When reset is released, the circuit resumes normal clocked operation.
-
-#### Why this behavior is correct
-
+Synchronizers are useful when crossing clock domains because the buffered flip flop design can prevent the FPGA from sampling while an input is changing. 
 
 ### Tick Generator / Counter Waveform
 
@@ -141,6 +130,7 @@ When `enable` is active, the counter increments on each clock edge. Once the cou
 
 #### Why this behavior is correct
 
+`EXPECTED_DIVISOR` was calculated using the other constants as 27. This means the tick needs to be generated every 27 clock cycles. Since the counter is incrementing on each clock edge (from the image `count` follows `clk` with very little delay) once it reaches 0x1A = 0d26 then 27 clock cycles from 0-26 have elapsed and the tick is generated. This is why tick goes high immediately after 0x1A. 
 
 ## Verification Approach
 
