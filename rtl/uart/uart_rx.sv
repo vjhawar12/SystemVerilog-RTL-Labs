@@ -38,6 +38,7 @@ always_ff @(posedge clk or negedge n_rst) begin
         shift_reg <= '0;
         counter <= 0;
         bit_count <= 0;
+        data_out <= 0;
         state <= IDLE;
     end else if (tick) begin
         case (state)

@@ -10,10 +10,10 @@ module tb_uart_rx;
     localparam OVERSAMPLE_RATE = 16;
     logic [DATA_FRAME_LENGTH - 1:0]data_out;
     
-    uart_rx dut #(
+    uart_rx #(
         .DATA_FRAME_LENGTH(DATA_FRAME_LENGTH),
         .OVERSAMPLE_RATE(OVERSAMPLE_RATE)
-    )(
+    ) dut (
         .clk(clk),
         .n_rst(n_rst),
         .tick(tick),
@@ -21,6 +21,7 @@ module tb_uart_rx;
         .data_out(data_out)
     );
 
+    logic [DATA_FRAME_LENGTH - 1 : 0]data_in = 0;
     always #5 clk = ~clk;
     assign tick = 1'b1;
 
@@ -39,6 +40,7 @@ module tb_uart_rx;
         input logic [DATA_FRAME_LENGTH - 1 : 0]data_frame
     ); 
         begin
+            data_in = data_frame;
             // start bit
             send_one_bit(0);
             // data byte
@@ -84,13 +86,10 @@ module tb_uart_rx;
 
         _reset();
 
-        logic [7:0]i;
-        for (i; i <= 0xFF; i++) begin
+        for (int i = 0; i < 256; i++) begin
             send_one_byte_test(i);
-            if (i == 0xFF) begin
-               break; 
-            end
         end
+        send_one_byte_test(256);
 
         $display("UART RX test passed.");
         $finish;
