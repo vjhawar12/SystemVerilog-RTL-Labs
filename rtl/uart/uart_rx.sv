@@ -6,7 +6,7 @@ module uart_rx #(
     // tick comes from the tick_gen module
     input logic tick,
     input logic n_rst,
-    // incoming data
+    // incoming bit
     input logic rx_serial,
     // data being sent out
     output logic [DATA_FRAME_LENGTH - 1:0]data_out
