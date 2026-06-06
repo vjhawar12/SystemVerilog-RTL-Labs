@@ -132,6 +132,18 @@ When `enable` is active, the counter increments on each clock edge. Once the cou
 
 `EXPECTED_DIVISOR` was calculated using the other constants as 27. This means the tick needs to be generated every 27 clock cycles. Since the counter is incrementing on each clock edge (from the image `count` follows `clk` with very little delay) once it reaches 0x1A = 0d26 then 27 clock cycles from 0-26 have elapsed and the tick is generated. This is why tick goes high immediately after 0x1A. 
 
+### UART Receiver (RX) Waveform
+
+<img src="photos/uart_rx.png" alt="UART Receiver waveform" width="800">
+
+#### What this waveform shows
+
+This waveform shows that `data_out` follows `data_in` and the `data_out` period correctly accounts for 16x oversampling.
+
+#### Why this behavior is correct
+
+The module uses clock period of 10 ns, `OVERSAMPLE_RATE` of 16, and `DATA_FRAME_LENGTH` of 8 (plus 1 start bit, 1 stop bit, no parity). Therefore, each bit should last for 16 * 10 * 10 ns = 1600 ns. From the waveform we can see that the markers are placed roughly 1630 ns apart (see the top of the graph). The extra +30 ns is likely due to marker placement. `data_out` also follows `data_in` but is buffered by 9-10 clock cycles. This is because the receiver is sampling in the middle of the stop bit and once it sees a logic high value it moves on to the DONE state rather than waiting for the full bit time period. 
+
 ## Verification Approach
 
 The testbenches are written to exercise important behavior such as:
