@@ -142,7 +142,7 @@ This waveform shows that `data_out` follows `data_in` and the `data_out` period 
 
 #### Why this behavior is correct
 
-The module uses clock period of 10 ns, `OVERSAMPLE_RATE` of 16, and `DATA_FRAME_LENGTH` of 8 (plus 1 start bit, 1 stop bit, no parity). Therefore, each bit should last for 16 * 10 * 10 ns = 1600 ns. From the waveform we can see that the markers are placed roughly 1630 ns apart (see the top of the graph). The extra +30 ns is likely due to marker placement. `data_out` also follows `data_in` but is buffered by 9-10 clock cycles. This is because the receiver is sampling in the middle of the stop bit and once it sees a logic high value it moves on to the DONE state rather than waiting for the full bit time period. 
+The module uses clock period of 10 ns, `OVERSAMPLE_RATE` of 16, and `DATA_FRAME_LENGTH` of 8 (plus 1 start bit, 1 stop bit, no parity). Therefore, each data frame should last for 16 * 10 * 10 ns = 1600 ns and each bit should last for 16x clock period. From the waveform we can see that the markers are placed roughly 1630 ns apart (see the top of the graph). The extra +30 ns is likely due to marker placement. `data_out` also follows `data_in` but is buffered by 9-10 clock cycles. This is because the receiver is sampling in the middle of the stop bit and once it sees a logic high value it moves on to the DONE state rather than waiting for the full bit time period. 
 
 ## Verification Approach
 
