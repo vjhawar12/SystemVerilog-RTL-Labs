@@ -86,6 +86,10 @@ always_ff @(posedge clk or negedge n_rst) begin
                 data_out <= shift_reg;
                 state <= IDLE;
             end
+
+            default: begin
+                    state <= IDLE;
+                end
         endcase 
     end
 end
