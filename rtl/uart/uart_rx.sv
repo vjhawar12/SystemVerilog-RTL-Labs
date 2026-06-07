@@ -9,7 +9,8 @@ module uart_rx #(
     // incoming bit
     input logic rx_serial,
     // data being sent out
-    output logic [DATA_FRAME_LENGTH - 1:0]data_out
+    output logic [DATA_FRAME_LENGTH - 1:0]data_out,
+    output logic rx_done
 );
 
 /* 
@@ -43,6 +44,7 @@ always_ff @(posedge clk or negedge n_rst) begin
     end else if (tick) begin
         case (state)
             IDLE :  begin
+                        rx_done <= 0;
                         if (rx_serial == 1'b0) begin
                             state <= START;
                             counter <= 0;
@@ -84,6 +86,7 @@ always_ff @(posedge clk or negedge n_rst) begin
                     end
             DONE : begin
                 data_out <= shift_reg;
+                rx_done <= 1'b1;
                 state <= IDLE;
             end
 
