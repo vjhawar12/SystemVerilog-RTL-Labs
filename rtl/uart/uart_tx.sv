@@ -1,3 +1,6 @@
+// when you pulse tx_start with a byte on data_in, the module should transmit a UART frame on tx_serial
+// idle high → start bit low → 8 data bits LSB-first → stop bit high → tx_done pulse → return to idle.
+
 module uart_tx #(
     parameter int DATA_FRAME_LENGTH = 8,
     parameter int OVERSAMPLE_RATE = 16
