@@ -54,29 +54,31 @@ module tb_uart_tx;
             tx_start = 1'b1;
             data_in = _data_in;
             @(negedge clk);
-            #1;
             tx_start = 1'b0;
         end
+    endtask
+
+    task automatic check_idle();
+    begin
+        // IDLE
+        if (tx_busy != 1'b0 || tx_done != 1'b0 || tx_serial != 1'b1) begin
+            $fatal(
+                1, 
+                "Case IDLE: Received: tx_busy=%0b tx_done=%0b tx_serial=%0b Expected: tx_busy=%0b tx_done=%0b tx_serial=%0b", 
+                tx_busy, tx_done, tx_serial,
+                1'b0, 1'b0, 1'b1
+            );
+        end
+    end
     endtask
 
     task automatic check_serial(
         input logic [DATA_FRAME_LENGTH - 1 : 0]_data_in
     );
         begin
-            // IDLE
-            if (tx_busy != 1'b0 || tx_done != 1'b0 || tx_serial != 1'b1) begin
-                $fatal(
-                    1, 
-                    "Case IDLE: Received: tx_busy=%0b tx_done=%0b tx_serial=%0b Expected: tx_busy=%0b tx_done=%0b tx_serial=%0b", 
-                    tx_busy, tx_done, tx_serial,
-                    1'b0, 1'b0, 1'b1
-                );
-            end
             @(posedge clk);
             #1;
             // wait an extra clock edge to enter START
-            @(posedge clk);
-            #1;
             // START
             if (tx_busy != 1'b1 || tx_done != 1'b0 || tx_serial != 1'b0) begin
                 $fatal(
@@ -89,6 +91,8 @@ module tb_uart_tx;
             // DATA
             for (int i = 0; i < DATA_FRAME_LENGTH; i++) begin
                 wait_one_uart_bit();
+                @(posedge clk);
+                #1;
                 if (tx_busy != 1'b1 || tx_done != 1'b0 || tx_serial != _data_in[i]) begin
                     $fatal(
                         1, 
@@ -99,6 +103,8 @@ module tb_uart_tx;
                 end 
             end
             wait_one_uart_bit();
+            @(posedge clk);
+            #1;
             // STOP
             if (tx_busy != 1'b1 || tx_done != 1'b0 || tx_serial != 1'b1) begin
                 $fatal(
@@ -109,6 +115,8 @@ module tb_uart_tx;
                 );
             end
             wait_one_uart_bit();
+            @(posedge clk);
+            #1;
             // DONE
             if (tx_busy != 1'b0 || tx_done != 1'b1 || tx_serial != 1'b1) begin
                 $fatal(
@@ -153,6 +161,7 @@ module tb_uart_tx;
         _reset();
 
         for (int i = 0; i < 256; i++) begin
+            check_idle();
             send_one_byte(i);
             check_serial(i);
         end
