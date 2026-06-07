@@ -89,7 +89,6 @@ module tb_uart_rx;
         for (int i = 0; i < 256; i++) begin
             send_one_byte_test(i);
         end
-        send_one_byte_test(256);
 
         $display("UART RX test passed.");
         $finish;

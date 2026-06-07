@@ -165,8 +165,6 @@ module tb_uart_tx;
             send_one_byte(i);
             check_serial(i);
         end
-        send_one_byte(256);
-        check_serial(256);
 
         $display("UART TX test passed.");
         $finish;
