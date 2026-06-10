@@ -45,6 +45,7 @@ always_ff @(posedge clk or negedge n_rst) begin
                     tick_count <= 0;
                     tx_serial <= 1'b1;
                     tx_busy <= 0;
+                    tx_done <= 0;
                     if (tx_start) begin
                         state <= START;
                         tx_busy <= 1'b1;

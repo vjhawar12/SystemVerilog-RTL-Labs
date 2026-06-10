@@ -41,6 +41,7 @@ always_ff @(posedge clk or negedge n_rst) begin
         bit_count <= 0;
         data_out <= 0;
         state <= IDLE;
+        rx_done <= 1'b0;
     end else if (tick) begin
         case (state)
             IDLE :  begin

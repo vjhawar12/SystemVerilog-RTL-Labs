@@ -1,6 +1,7 @@
 module uart_top #(
     parameter int DATA_FRAME_LENGTH = 8,
-    parameter int OVERSAMPLING_RATE = 16
+    parameter int OVERSAMPLING_RATE = 16,
+    parameter int CLKS_PER_TICK = 27
 )(
     input logic clk,
     input logic n_rst,
